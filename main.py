@@ -1170,6 +1170,25 @@ def calculate_news_weight(
     return total_weight
 
 
+def check_keyword_match(keyword: str, text: str) -> bool:
+    """检查关键词是否匹配文本（支持英文单词边界）"""
+    if not keyword:
+        return False
+    
+    keyword = keyword.strip()
+    if not keyword:
+        return False
+
+    # 如果关键词由字母数字、下划线、连字符或空格组成（认为是英文单词或短语），使用单词边界匹配
+    # 避免 "Mac" 匹配到 "Machine"，同时也支持 "nano banana" 精确匹配
+    if re.match(r'^[a-zA-Z0-9_\-\s]+$', keyword):
+        pattern = r'\b' + re.escape(keyword) + r'\b'
+        return bool(re.search(pattern, text, re.IGNORECASE))
+    else:
+        # 其他情况（如中文、包含特殊字符等）使用包含匹配
+        return keyword.lower() in text.lower()
+
+
 def matches_word_groups(
     title: str, word_groups: List[Dict], filter_words: List[str], global_filters: Optional[List[str]] = None
 ) -> bool:
@@ -1184,7 +1203,7 @@ def matches_word_groups(
 
     # 全局过滤检查（优先级最高）
     if global_filters:
-        if any(global_word.lower() in title_lower for global_word in global_filters):
+        if any(check_keyword_match(global_word, title) for global_word in global_filters):
             return False
 
     # 如果没有配置词组，则匹配所有标题（支持显示全部新闻）
@@ -1192,7 +1211,7 @@ def matches_word_groups(
         return True
 
     # 过滤词检查
-    if any(filter_word.lower() in title_lower for filter_word in filter_words):
+    if any(check_keyword_match(filter_word, title) for filter_word in filter_words):
         return False
 
     # 词组匹配检查
@@ -1203,7 +1222,7 @@ def matches_word_groups(
         # 必须词检查
         if required_words:
             all_required_present = all(
-                req_word.lower() in title_lower for req_word in required_words
+                check_keyword_match(req_word, title) for req_word in required_words
             )
             if not all_required_present:
                 continue
@@ -1211,7 +1230,7 @@ def matches_word_groups(
         # 普通词检查
         if normal_words:
             any_normal_present = any(
-                normal_word.lower() in title_lower for normal_word in normal_words
+                check_keyword_match(normal_word, title) for normal_word in normal_words
             )
             if not any_normal_present:
                 continue
@@ -1408,7 +1427,7 @@ def count_word_frequency(
                     # 原有的匹配逻辑
                     if required_words:
                         all_required_present = all(
-                            req_word.lower() in title_lower
+                            check_keyword_match(req_word, title)
                             for req_word in required_words
                         )
                         if not all_required_present:
@@ -1416,7 +1435,7 @@ def count_word_frequency(
 
                     if normal_words:
                         any_normal_present = any(
-                            normal_word.lower() in title_lower
+                            check_keyword_match(normal_word, title)
                             for normal_word in normal_words
                         )
                         if not any_normal_present:
