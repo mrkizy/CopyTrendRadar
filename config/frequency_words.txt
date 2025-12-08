@@ -1,56 +1,9 @@
-胖东来
-于东来
-
 DeepSeek
 梁文锋
-
-华为
-鸿蒙
-HarmonyOS
-任正非
-
-比亚迪
-王传福
-
-大疆
-DJI
-
-宇树
-王兴兴
-
-智元
-灵犀
-稚晖君
-彭志辉
-
-黑神话
-冯骥
-
-影之刃零
-梁其伟
-
-哪吒
-饺子
-杨宇
-!车
-!餐
-
-三体
-流浪地球
-刘慈欣
-郭帆
-
-申奥
-
-京东
-刘强东
 
 字节
 bytedance
 张一鸣
-
-特斯拉
-马斯克
 
 微软
 Microsoft
@@ -58,56 +11,151 @@ Microsoft
 英伟达
 NVIDIA
 黄仁勋
-
-AMD
++ai
 
 谷歌
 google
-gemini
-deepmind
+
+苹果
+apple
+!水果
+!fruit
+!苹果哥
+
+独立开发者
+个人开发者
+AI产品
+
+AIGC
+aigc
+AI创作
+Midjourney
+Stable Diffusion
+
+comfyui
+n8n
+dify
+工作流
 
 chatgpt
+ChatGPT
 openai
 sora
+GPT-4
+GPT-5
 
-claude
+seo
+搜索引擎优化
+独立站
+
+cursor
 Anthropic
+Claude
+claude
+deepmind
+Copilot
+DALL·E
+Llama
+Mistral
+codex
+
+mcp
+context
+上下文工程
+提示工程
+prompt
+vibe coding
+氛围编程
+
+AI Coding
+AI Code Generation
+Copilot Coding
+Code Interpreter
+AutoDev
+代码代理
+多代理协作开发
+自主调试
+AI驱动测试
+AI代码审查
+Prompt Engineering for Coding
+代码检索增强生成
+RAG
+代码语义搜索
+Code Embedding Search
+代码知识库
+Codebase Knowledge Graph
+NL2Code
+Code2NL
+
+agent
+agentic
+Multi-Agent
+智能体
+ollama
+langgraph
 
 iphone
 ipad
 mac
 ios
+swift
+!taylor
+
+人工智能
+ai
+AI
+!gai
+!paiN
+!pain
+!nard
+!股票
+!标普
+
+antigravity
+Gemini
+gemini
+nano banana
+Nano Banana
+NotebookLM
+google labs
+
+
+Artificial Intelligence
+机器学习
+Machine Learning
+深度学习
+Deep Learning
+生成式 AI
+Generative AI
+对比学习
+Contrastive Learning
+强化学习
+Reinforcement Learning
+联邦学习
+Federated Learning
+
+大语言模型
+LLM
+Transformers
+Diffusion Model
+GAN
+RAG
+AutoGPT
 
 ai
-!gai
-人工智能
+AI
++推理
 
-自动驾驶
+知识库搜索引擎
+短视频生成器
+虚拟主播
+电子病历分析器
 
-机器人
+ai
++创业
 
-国产
-中国
+ai
++产品
 
-美国
-日本
-韩国
-
-芯片
-光刻机
-
-科技
-
-核能
-
-水电站
-雅鲁藏布江
-
-新质生产力
-
-月球
-登月
-火星
-宇宙
-飞船
-航空
+ai
++商业
