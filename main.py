@@ -12,6 +12,7 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 from email.utils import formataddr, formatdate, make_msgid
 from datetime import datetime
+from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Union
 
@@ -1121,8 +1122,19 @@ def detect_latest_new_titles(current_platform_ids: Optional[List[str]] = None) -
         source_new_titles = {}
 
         for title, title_data in latest_source_titles.items():
-            # 使用全局历史库进行去重
-            if title not in global_historical_titles:
+            # 使用全局历史库进行去重（支持模糊匹配）
+            # 1. 精确匹配
+            if title in global_historical_titles:
+                continue
+                
+            # 2. 模糊匹配
+            is_similar = False
+            for history_title in global_historical_titles:
+                if check_similarity(title, history_title):
+                    is_similar = True
+                    break
+            
+            if not is_similar:
                 source_new_titles[title] = title_data
 
         if source_new_titles:
@@ -1166,6 +1178,16 @@ def calculate_news_weight(
     )
 
     return total_weight
+
+
+def check_similarity(text1: str, text2: str, threshold: float = 0.85) -> bool:
+    """检查两个文本是否相似（用于去重）"""
+    if not text1 or not text2:
+        return False
+    # 简单的包含关系检查（快速去重）
+    if text1 in text2 or text2 in text1:
+        return True
+    return SequenceMatcher(None, text1, text2).quick_ratio() > threshold
 
 
 def check_keyword_match(keyword: str, text: str) -> bool:
@@ -1661,7 +1683,17 @@ def prepare_report_data(
             for source_id, titles_data in filtered_new_titles.items():
                 source_name = id_to_name.get(source_id, source_id)
                 for title, title_data in titles_data.items():
-                    if title not in merged_titles:
+                    # 模糊匹配查找已存在的标题
+                    matched_key = None
+                    if title in merged_titles:
+                         matched_key = title
+                    else:
+                         for existing_title in merged_titles.keys():
+                             if check_similarity(title, existing_title):
+                                 matched_key = existing_title
+                                 break
+                                 
+                    if not matched_key:
                         merged_titles[title] = {
                             "sources": [source_name],
                             "data": title_data,
@@ -1670,12 +1702,12 @@ def prepare_report_data(
                             "mobile_url": title_data.get("mobileUrl", "")
                         }
                     else:
-                        merged_titles[title]["sources"].append(source_name)
+                        merged_titles[matched_key]["sources"].append(source_name)
                         # 如果之前没有URL而现在有，则更新
-                        if not merged_titles[title]["url"] and title_data.get("url"):
-                             merged_titles[title]["url"] = title_data.get("url")
-                        if not merged_titles[title]["mobile_url"] and title_data.get("mobileUrl"):
-                             merged_titles[title]["mobile_url"] = title_data.get("mobileUrl")
+                        if not merged_titles[matched_key]["url"] and title_data.get("url"):
+                             merged_titles[matched_key]["url"] = title_data.get("url")
+                        if not merged_titles[matched_key]["mobile_url"] and title_data.get("mobileUrl"):
+                             merged_titles[matched_key]["mobile_url"] = title_data.get("mobileUrl")
 
             # 构建统一的来源列表
             unified_source_titles = []
