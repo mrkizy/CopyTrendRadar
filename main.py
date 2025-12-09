@@ -1099,7 +1099,7 @@ def detect_latest_new_titles(current_platform_ids: Optional[List[str]] = None) -
         latest_titles = filtered_latest_titles
 
     # 汇总历史标题（按平台过滤）
-    historical_titles = {}
+    global_historical_titles = set()
     for file_path in files[:-1]:
         historical_data, _ = parse_file_titles(file_path)
 
@@ -1112,19 +1112,17 @@ def detect_latest_new_titles(current_platform_ids: Optional[List[str]] = None) -
             historical_data = filtered_historical_data
 
         for source_id, titles_data in historical_data.items():
-            if source_id not in historical_titles:
-                historical_titles[source_id] = set()
             for title in titles_data.keys():
-                historical_titles[source_id].add(title)
+                global_historical_titles.add(title)
 
     # 找出新增标题
     new_titles = {}
     for source_id, latest_source_titles in latest_titles.items():
-        historical_set = historical_titles.get(source_id, set())
         source_new_titles = {}
 
         for title, title_data in latest_source_titles.items():
-            if title not in historical_set:
+            # 使用全局历史库进行去重
+            if title not in global_historical_titles:
                 source_new_titles[title] = title_data
 
         if source_new_titles:
@@ -1657,36 +1655,62 @@ def prepare_report_data(
                     filtered_new_titles[source_id] = filtered_titles
 
         if filtered_new_titles and id_to_name:
+            # === 跨来源合并去重逻辑 ===
+            merged_titles = {}  # title -> {sources: [], data: ...}
+
             for source_id, titles_data in filtered_new_titles.items():
                 source_name = id_to_name.get(source_id, source_id)
-                source_titles = []
-
                 for title, title_data in titles_data.items():
-                    url = title_data.get("url", "")
-                    mobile_url = title_data.get("mobileUrl", "")
-                    ranks = title_data.get("ranks", [])
-
-                    processed_title = {
-                        "title": title,
-                        "source_name": source_name,
-                        "time_display": "",
-                        "count": 1,
-                        "ranks": ranks,
-                        "rank_threshold": CONFIG["RANK_THRESHOLD"],
-                        "url": url,
-                        "mobile_url": mobile_url,
-                        "is_new": True,
-                    }
-                    source_titles.append(processed_title)
-
-                if source_titles:
-                    processed_new_titles.append(
-                        {
-                            "source_id": source_id,
-                            "source_name": source_name,
-                            "titles": source_titles,
+                    if title not in merged_titles:
+                        merged_titles[title] = {
+                            "sources": [source_name],
+                            "data": title_data,
+                            # 优先保留有 url 的数据
+                            "url": title_data.get("url", ""),
+                            "mobile_url": title_data.get("mobileUrl", "")
                         }
-                    )
+                    else:
+                        merged_titles[title]["sources"].append(source_name)
+                        # 如果之前没有URL而现在有，则更新
+                        if not merged_titles[title]["url"] and title_data.get("url"):
+                             merged_titles[title]["url"] = title_data.get("url")
+                        if not merged_titles[title]["mobile_url"] and title_data.get("mobileUrl"):
+                             merged_titles[title]["mobile_url"] = title_data.get("mobileUrl")
+
+            # 构建统一的来源列表
+            unified_source_titles = []
+            for title, info in merged_titles.items():
+                sources = info["sources"]
+                # 如果有多个来源，合并显示，例如 "[36氪, 少数派]"
+                # 如果只有一个来源，直接显示 "36氪"
+                if len(sources) > 1:
+                    # 去重并排序来源
+                    unique_sources = sorted(list(set(sources)))
+                    display_source_name = f"[{', '.join(unique_sources)}]"
+                else:
+                    display_source_name = sources[0]
+
+                processed_title = {
+                    "title": title,
+                    "source_name": display_source_name,
+                    "time_display": "",
+                    "count": 1,
+                    "ranks": info["data"].get("ranks", []),
+                    "rank_threshold": CONFIG["RANK_THRESHOLD"],
+                    "url": info["url"],
+                    "mobile_url": info["mobile_url"],
+                    "is_new": True,
+                }
+                unified_source_titles.append(processed_title)
+
+            if unified_source_titles:
+                processed_new_titles.append(
+                    {
+                        "source_id": "merged_new",
+                        "source_name": "最新资讯",  # 统一的标题头
+                        "titles": unified_source_titles,
+                    }
+                )
 
     processed_stats = []
     for stat in stats:
