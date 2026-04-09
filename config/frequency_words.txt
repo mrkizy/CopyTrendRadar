@@ -62,10 +62,14 @@ codex
 mcp
 context
 上下文工程
+上下文窗口
 提示工程
 prompt
 vibe coding
 氛围编程
+思维链
+Prompt Engineering
+
 
 AI Coding
 AI Code Generation
@@ -93,6 +97,27 @@ Multi-Agent
 智能体
 ollama
 langgraph
+AI Agent
+Multi-Agent
+Agentic Workflow
+Agent框架
+
+Self-Reflection
+自我纠错
+Task Planning
+任务分解
+多智能体协作
+
+Agent编排
+工作流编排
+Workflow Orchestration
+Agent调度
+Agent Scheduling
+Agent路由
+Agent Router
+Agent Supervisor
+Agent Manager
+Agent Executor
 
 iphone
 ipad
@@ -141,10 +166,36 @@ Diffusion Model
 GAN
 RAG
 AutoGPT
+检索增强生成
+知识库
+向量检索
+Vector Search
+知识图谱
+
+Agent自我进化
+Self-Evolving Agent
+Agent自我改进
+Self-Improving Agent
+Agent经验学习
+Learning from Experience
+Agent技能习得
+Skill Acquisition
+Agent持续学习
+Continual Learning
 
 ai
 AI
 +推理
+
+Harness Engineering
+LLMOps
+Guardrails
+LLM Evaluation
+Model Serving
+AI Observability
+Context Engineering
+Agent Orchestration
+Prompt Injection
 
 知识库搜索引擎
 短视频生成器
