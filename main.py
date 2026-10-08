@@ -4110,12 +4110,14 @@ def send_to_feishu(
         now = get_beijing_time()
 
         payload = {
-            "msg_type": "text",
-            "content": {
-                "total_titles": total_titles,
-                "timestamp": now.strftime("%Y-%m-%d %H:%M:%S"),
-                "report_type": report_type,
-                "text": batch_content,
+            "msg_type": "interactive",
+            "card": {
+                "config": {"wide_screen_mode": True},
+                "header": {
+                    "template": "blue",
+                    "title": {"tag": "plain_text", "content": f"🔥 热点新闻 · {report_type}"},
+                },
+                "elements": [{"tag": "markdown", "content": batch_content}],
             },
         }
 
