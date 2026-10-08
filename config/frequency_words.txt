@@ -58,12 +58,12 @@ DALL·E
 Llama
 Mistral
 codex
+grok bot
+claude fable
+jev
 
 mcp
 context
-上下文工程
-上下文窗口
-提示工程
 prompt
 vibe coding
 氛围编程
