@@ -48,10 +48,16 @@ seo
 搜索引擎优化
 独立站
 
-cursor
+
 Anthropic
 Claude
-claude
+
+codex
+openai
+tibo
+Tibo
+
+cursor
 deepmind
 Copilot
 DALL·E
@@ -59,15 +65,11 @@ Llama
 Mistral
 codex
 grok bot
-claude fable
 jev
-
 mcp
 context
 prompt
 vibe coding
-氛围编程
-思维链
 Prompt Engineering
 
 
@@ -110,6 +112,7 @@ Task Planning
 
 Agent编排
 工作流编排
+智能体编排
 Workflow Orchestration
 Agent调度
 Agent Scheduling
